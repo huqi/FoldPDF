@@ -1,0 +1,49 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+*.pyo
+*.pyc
+build/
+dist/
+wheels/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# PyInstaller
+*.spec
+build/
+dist/
+
+# IDE and Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+foldpdf.log
+
+# Dependencies
+uv.lock
+
+# Python version management
+.python-version
+
+# OS-specific files
+Thumbs.db
+.DS_Store
+*.psd
+
+# Project-specific build artifacts
+dist/
+build/
+FoldPDF.spec

@@ -1,0 +1,26 @@
+[project]
+name = "foldpdf"
+version = "0.1.0"
+description = "A powerful batch PDF converter for image folders with intelligent compression"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "img2pdf>=0.6.3",
+    "natsort>=8.4.0",
+    "pillow>=12.1.0",
+    "pyinstaller>=6.18.0",
+    "pyqt6>=6.10.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/foldpdf"
+Issues = "https://github.com/yourusername/foldpdf/issues"
+Repository = "https://github.com/yourusername/foldpdf"
+
+[project.optional-dependencies]
+dev = [
+    "black>=24.0.0",
+    "flake8>=7.0.0",
+    "pylint>=3.0.0",
+]
+
