@@ -5,6 +5,8 @@ FoldPDF 配置文件
 
 import os
 from pathlib import Path
+from io import BytesIO
+from icon_data import ICON_BINARY_DATA
 
 # ===== 图片处理配置 =====
 # 最大图片分辨率（长边），超过此值会缩小。推荐 2560 (2K) 或 1920 (1080p)
@@ -32,7 +34,14 @@ PAGE_SIZES = {
 WINDOW_WIDTH = 400
 WINDOW_HEIGHT = 650
 WINDOW_TITLE = "FoldPDF - 文件夹转PDF工具"
-WINDOW_ICON = "app_icon.ico"
+
+# 从嵌入的二进制数据创建icon（延迟加载，防止在QApplication创建前使用QIcon）
+def get_window_icon():
+    """从二进制数据创建QIcon对象"""
+    from PyQt6.QtGui import QIcon, QPixmap
+    pixmap = QPixmap()
+    pixmap.loadFromData(ICON_BINARY_DATA, "ICO")
+    return QIcon(pixmap)
 
 # ===== 日志配置 =====
 LOG_ENABLED = True

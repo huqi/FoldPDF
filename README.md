@@ -38,6 +38,8 @@ python main.py
 ### 方式二：使用预打包的 EXE（仅 Windows）
 下载 [FoldPDF.exe](https://releases.example.com/foldpdf.exe)，双击运行。
 
+> **注意**：应用图标已嵌入到代码中，无需在 EXE 同级目录放置 `app_icon.ico` 文件。
+
 ## 使用方法
 
 ### 基础使用
@@ -64,7 +66,7 @@ python main.py
 
 ## 配置项
 
-在 `main.py` 中可自定义以下参数：
+在 `config.py` 中可自定义以下参数：
 
 ```python
 # 图片处理
@@ -72,7 +74,7 @@ MAX_IMAGE_SIZE = 2560  # 最大分辨率（长边）
 IMAGE_QUALITY = 80     # JPEG 质量 (1-100)
 
 # 支持格式
-VALID_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.webp', '.bmp')
+VALID_IMAGE_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.webp', '.bmp')
 
 # 纸张尺寸
 PAGE_SIZES = {
@@ -80,6 +82,23 @@ PAGE_SIZES = {
     "A3": (420, 297),
     "B5": (176, 250)
 }
+```
+
+## 项目结构
+
+```
+FoldPDF/
+├── main.py                    # 主程序入口
+├── ui_main.py                 # PyQt6 用户界面
+├── config.py                  # 配置参数和常量
+├── logger.py                  # 日志记录模块
+├── icon_data.py               # 嵌入的应用图标二进制数据
+├── make_ico.py                # 图标生成脚本
+├── pyproject.toml             # 项目配置和依赖
+├── requirements.txt           # Python 依赖
+├── README.md                  # 项目文档
+├── LICENSE                    # MIT 开源协议
+└── build_exe.bat             # 编译脚本（Windows）
 ```
 
 ## 常见问题

@@ -1,6 +1,6 @@
 # FoldPDF GitHub 提交最终清单
 
-## ✅ 需要提交到 GitHub 的文件（17 个）
+## ✅ 需要提交到 GitHub 的文件（18 个）
 
 | 文件 | 类型 | 说明 |
 |------|------|------|
@@ -9,6 +9,7 @@
 | `ui_main.py` | 源代码 | PyQt6 UI 界面 |
 | `config.py` | 源代码 | 配置参数模块 |
 | `logger.py` | 源代码 | 日志记录模块 |
+| `icon_data.py` | 源代码 | 嵌入的应用图标二进制数据 |
 | `make_ico.py` | 源代码 | 图标制作脚本 |
 | `pyproject.toml` | 项目配置 | 项目元数据和依赖 |
 | `requirements.txt` | 依赖 | pip 依赖清单 |
@@ -16,9 +17,11 @@
 | `OPTIMIZATION_REPORT.md` | 文档 | 项目优化记录 |
 | `GIT_COMMIT_GUIDE.md` | 文档 | GitHub 提交指南 |
 | `LICENSE` | 协议 | MIT 开源协议 |
-| `app_icon.ico` | 资源 | 应用图标 |
+| `app_icon.ico` | 资源 | 原始应用图标（备份用） |
+| `app_icon.png` | 资源 | 应用图标 PNG 版本 |
 | `build_exe.bat` | 脚本 | PyInstaller 完整打包 |
 | `rebuild.bat` | 脚本 | PyInstaller 快速打包 |
+| `GITHUB_CHECKLIST.md` | 文档 | GitHub 提交清单 |
 
 ---
 
@@ -34,6 +37,8 @@
 - `dist/` - 编译输出目录
 - `build/` - 编译中间文件目录
 - `FoldPDF.spec` - PyInstaller 配置（自动生成）
+- `gen_icon.py` - 一次性使用的图标生成脚本（已弃用）
+- `generate_icon_binary.py` - 旧的图标生成脚本（已弃用）
 
 ### Python 缓存
 - `__pycache__/` - Python 字节码

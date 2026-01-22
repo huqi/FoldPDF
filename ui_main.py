@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                              QFrame, QCheckBox, QTreeWidget, QHeaderView, QPlainTextEdit)
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QIcon
-from config import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, WINDOW_ICON
+from config import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, get_window_icon
 
 class FoldPDFWindow(QMainWindow):
     # 定义自定义信号（必须在类级别定义）
@@ -13,7 +13,7 @@ class FoldPDFWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle(WINDOW_TITLE)
-        self.setWindowIcon(QIcon(WINDOW_ICON))
+        self.setWindowIcon(get_window_icon())  # 在QApplication创建后调用
         self.setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT + 150)  # 增加高度以容纳日志
         self.initUI()
 
