@@ -18,8 +18,8 @@ from logger import logger
 
 # --- 核心转换后台线程 ---
 class BatchConvertThread(QThread):
-    # 定义信号：(当前文件夹名, 当前步骤进度0-100, 总体进度百分比)
-    progress_update = pyqtSignal(str, int, int)
+    # 定义信号：(当前文件夹名, 当前步骤进度0-100, 总体进度百分比, 已完成任务数)
+    progress_update = pyqtSignal(str, int, int, int)
     finished = pyqtSignal(bool, str)
     log_message = pyqtSignal(str)  # 新增：日志信号
 
@@ -49,7 +49,7 @@ class BatchConvertThread(QThread):
                     
                 folder_name = os.path.basename(folder_path)
                 logger.debug(f"处理文件夹: {folder_name} ({index + 1}/{total_tasks})")
-                self.progress_update.emit(folder_name, 0, int((index / total_tasks) * 100))
+                self.progress_update.emit(folder_name, 0, int((index / total_tasks) * 100), index)
                 self.log_message.emit(f"处理中: {folder_name}")
 
                 processed_images = []
@@ -108,7 +108,7 @@ class BatchConvertThread(QThread):
                 
                 # --- 核心优化：及时释放内存 ---
                 processed_images.clear() 
-                self.progress_update.emit(folder_name, 100, int(((index + 1) / total_tasks) * 100))
+                self.progress_update.emit(folder_name, 100, int(((index + 1) / total_tasks) * 100), index + 1)
 
             if self._is_running:
                 logger.info("所有转换任务已完成")
@@ -124,6 +124,7 @@ class FoldPDFApp(FoldPDFWindow):
     def __init__(self):
         super().__init__()
         self.all_tasks = []  # 存储格式: [(文件夹绝对路径, [图片路径列表]), ...]
+        self.root_folder = None  # 保存拖拽进去的根目录
         self.worker = None
         logger.info("应用启动")
         
@@ -146,6 +147,7 @@ class FoldPDFApp(FoldPDFWindow):
         if not os.path.isdir(path):
             return
         
+        self.root_folder = path  # 保存根目录
         self.file_tree.clear()
         self.all_tasks = []
         self.total_progress_bar.setValue(0)
@@ -226,13 +228,12 @@ class FoldPDFApp(FoldPDFWindow):
         """添加日志消息到 UI"""
         self.log_output.appendPlainText(message)
 
-    def update_ui_progress(self, folder_name, current_val, total_val):
+    def update_ui_progress(self, folder_name, current_val, total_val, processed):
         self.status_label.setText(f"当前处理: {folder_name}")
         self.current_progress_bar.setValue(current_val)
         self.total_progress_bar.setValue(total_val)
         
-        # 根据总体进度百分比计算已完成的任务数（四舍五入以获得准确的任务数）
-        processed = round(len(self.all_tasks) * (total_val / 100))
+        # 直接显示已处理的任务数
         self.task_stats_label.setText(f"进度：{processed} / {len(self.all_tasks)} 目录")
 
     def on_finished(self, success, message):
@@ -245,10 +246,9 @@ class FoldPDFApp(FoldPDFWindow):
             self.total_progress_bar.setValue(100)
             self.current_progress_bar.setValue(100)
             
-            # 自动打开输出文件夹
-            if self.all_tasks:
-                root_folder = os.path.dirname(self.all_tasks[0][0])
-                self.open_output_folder(root_folder)
+            # 自动打开根目录
+            if self.root_folder:
+                self.open_output_folder(self.root_folder)
         else:
             logger.warning(f"转换失败: {message}")
 

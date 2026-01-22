@@ -29,7 +29,7 @@ echo [3/4] 开始打包，请稍候 (这可能需要 2-3 分钟)...
 call uv run pyinstaller ^
     --noconsole ^
     --onefile ^
-    --icon="app_icon.ico" ^
+    --icon="app_icon.png" ^
     --clean ^
     --name "FoldPDF" ^
     --collect-all PyQt6 ^
