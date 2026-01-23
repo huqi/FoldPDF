@@ -21,25 +21,30 @@ if exist FoldPDF.spec del /q FoldPDF.spec
 :: 3. 执行打包命令
 :: --noconsole: 不显示黑色命令行窗口
 :: --onefile: 所有的东西打包成一个 exe
+:: --optimize: 2 启用字节码优化，减少文件大小
 :: --name: 程序名字
 :: --clean: 打包前清理临时文件
-:: --collect-all: 收集所有模块文件（解决 DLL 问题）
 :: --hidden-import: 隐藏导入必要的模块
 echo [3/4] 开始打包，请稍候 (这可能需要 2-3 分钟)...
 call uv run pyinstaller ^
     --noconsole ^
     --onefile ^
+    --optimize=2 ^
     --icon="app_icon.png" ^
     --clean ^
     --name "FoldPDF" ^
-    --collect-all PyQt6 ^
-    --collect-all PIL ^
     --hidden-import=PyQt6.QtCore ^
     --hidden-import=PyQt6.QtGui ^
     --hidden-import=PyQt6.QtWidgets ^
+    --hidden-import=PyQt6.QtPrintSupport ^
     --hidden-import=PIL.Image ^
+    --hidden-import=PIL.JpegImagePlugin ^
     --hidden-import=img2pdf ^
     --hidden-import=natsort ^
+    --exclude-module=numpy ^
+    --exclude-module=scipy ^
+    --exclude-module=pandas ^
+    --exclude-module=matplotlib ^
     main.py
 
 :: 4. 检查结果

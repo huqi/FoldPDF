@@ -1,19 +1,35 @@
 import sys
 import os
 import io
-import img2pdf
 import platform
 import subprocess
-from natsort import natsorted
 from PyQt6.QtWidgets import QApplication, QFileDialog, QTreeWidgetItem
 from PyQt6.QtCore import QThread, pyqtSignal, Qt, QStandardPaths
 from ui_main import FoldPDFWindow
-from PIL import Image
 from config import (
     MAX_IMAGE_SIZE, IMAGE_QUALITY, IMAGE_OPTIMIZE,
     VALID_IMAGE_EXTENSIONS, PAGE_SIZES
 )
 from logger import logger
+
+# 延迟导入重型模块 - 在使用时才导入，加快启动速度
+def _import_img2pdf():
+    global img2pdf
+    if 'img2pdf' not in globals():
+        import img2pdf
+    return img2pdf
+
+def _import_natsort():
+    global natsorted
+    if 'natsorted' not in globals():
+        from natsort import natsorted
+    return natsorted
+
+def _import_pil():
+    global Image
+    if 'Image' not in globals():
+        from PIL import Image
+    return Image
 
 
 # --- 核心转换后台线程 ---
@@ -37,6 +53,10 @@ class BatchConvertThread(QThread):
 
     def run(self):
         try:
+            # 在循环前导入一次重型模块，避免循环中重复调用
+            Image = _import_pil()
+            img2pdf = _import_img2pdf()
+            
             page_sizes = PAGE_SIZES
             base_w, base_h = page_sizes[self.page_size_name]
             total_tasks = len(self.task_list)
@@ -173,7 +193,8 @@ class FoldPDFApp(FoldPDFWindow):
         valid_exts = VALID_IMAGE_EXTENSIONS
         try:
             # 使用 natsorted 替代原生 sorted，确保 1.jpg < 2.jpg < 10.jpg
-            items = natsorted(os.listdir(current_path))
+            natsorted_fn = _import_natsort()
+            items = natsorted_fn(os.listdir(current_path))
         except OSError as e:
             logger.warning(f"无法访问目录 {current_path}: {e}")
             return
