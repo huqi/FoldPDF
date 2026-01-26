@@ -39,11 +39,12 @@ class BatchConvertThread(QThread):
     finished = pyqtSignal(bool, str)
     log_message = pyqtSignal(str)  # 新增：日志信号
 
-    def __init__(self, task_list, page_size_name, auto_rotate):
+    def __init__(self, task_list, page_size_name, auto_rotate, image_quality=None):
         super().__init__()
         self.task_list = task_list
         self.page_size_name = page_size_name
         self.auto_rotate = auto_rotate
+        self.image_quality = image_quality if image_quality is not None else IMAGE_QUALITY
         self._is_running = True
 
     def stop(self):
@@ -91,7 +92,7 @@ class BatchConvertThread(QThread):
                             
                             # 3. 内存压缩
                             img_byte_arr = io.BytesIO()
-                            img.save(img_byte_arr, format='JPEG', quality=IMAGE_QUALITY, optimize=IMAGE_OPTIMIZE)
+                            img.save(img_byte_arr, format='JPEG', quality=self.image_quality, optimize=IMAGE_OPTIMIZE)
                             processed_images.append(img_byte_arr.getvalue())
                     except Exception as e:
                         logger.warning(f"处理图片失败 {img_path}: {e}")
@@ -230,7 +231,8 @@ class FoldPDFApp(FoldPDFWindow):
         self.worker = BatchConvertThread(
             self.all_tasks, 
             self.size_combo.currentText(),
-            self.check_auto_rotate.isChecked()
+            self.check_auto_rotate.isChecked(),
+            self.quality_spin.value()
         )
         self.worker.progress_update.connect(self.update_ui_progress)
         self.worker.log_message.connect(self.add_log_message)

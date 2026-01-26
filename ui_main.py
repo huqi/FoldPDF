@@ -1,9 +1,9 @@
 from PyQt6.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                              QLabel, QComboBox, QProgressBar, QPushButton, 
-                             QFrame, QCheckBox, QTreeWidget, QHeaderView, QPlainTextEdit)
+                             QFrame, QCheckBox, QTreeWidget, QHeaderView, QPlainTextEdit, QSpinBox)
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QIcon
-from config import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, get_window_icon
+from config import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, get_window_icon, IMAGE_QUALITY
 
 class FoldPDFWindow(QMainWindow):
     # 定义自定义信号（必须在类级别定义）
@@ -65,6 +65,17 @@ class FoldPDFWindow(QMainWindow):
         self.check_auto_rotate = QCheckBox("允许自动横向")
         self.check_auto_rotate.setChecked(True)
         settings_layout.addWidget(self.check_auto_rotate)
+        
+        # 图片质量控制
+        settings_layout.addSpacing(15)
+        settings_layout.addWidget(QLabel("图片质量:"))
+        self.quality_spin = QSpinBox()
+        self.quality_spin.setMinimum(1)
+        self.quality_spin.setMaximum(100)
+        self.quality_spin.setValue(IMAGE_QUALITY)
+        self.quality_spin.setSuffix("%")
+        self.quality_spin.setMaximumWidth(80)
+        settings_layout.addWidget(self.quality_spin)
         settings_layout.addStretch()
         main_layout.addLayout(settings_layout)
 
